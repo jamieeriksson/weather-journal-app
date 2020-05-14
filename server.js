@@ -27,5 +27,6 @@ app.get("/weather", function (req, res) {
 });
 
 app.post("/weather", function (req, res) {
+  projectData.push(req.body);
   res.send("POST request to /weather");
 });
