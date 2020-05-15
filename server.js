@@ -1,5 +1,5 @@
 // Empty JS object to act as endpoint for all routes
-const projectData = {};
+const projectData = [];
 
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -23,10 +23,17 @@ const server = app.listen(port, () =>
 
 // Routes
 app.get("/weather", function (req, res) {
-  res.send("GET request to /weather");
+  res.send(projectData);
 });
 
-app.post("/weather", function (req, res) {
-  projectData.push(req.body);
-  res.send("POST request to /weather");
-});
+app.post("/weather", addEntry);
+
+function addEntry(req, res) {
+  const newEntry = {
+    date: req.body.date,
+    temp: req.body.temp,
+    content: req.body.feelings,
+  };
+  projectData.push(newEntry);
+  res.send(projectData);
+}

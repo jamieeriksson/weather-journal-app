@@ -1,17 +1,15 @@
-const apiKey = "cd5123a986aa675d9c7a468518fcc1aa";
-
 // On click of "Generate" perform fetching
 document.getElementById("generate").addEventListener("click", showEntry);
 
 const getTemp = async () => {
   const zip = document.getElementById("zip").value;
-  const apiURL = `https://api.openweathermap.org/data/2.5/weather?zip=${zip},us&appid=${apiKey}`;
+  const apiKey = "cd5123a986aa675d9c7a468518fcc1aa";
+  const apiURL = `https://api.openweathermap.org/data/2.5/weather?zip=${zip},us&appid=`;
 
   // make a GET request to Open Weather Map API
-  const response = await fetch(apiURL);
+  const response = await fetch(apiURL + apiKey);
   try {
     // Convert resonse to json data
-    console.log(response);
     const data = await response.json();
     console.log(data);
     const tempF = ((data.main.temp - 273.15) * 9) / 5 + 32;
@@ -34,11 +32,29 @@ const postWeather = async (url = "", data = {}) => {
 
   try {
     const newData = await response.json();
-    console.log(newData);
   } catch (error) {
     console.log("error", error);
   }
 };
+
+const changeUI = async () => {
+  const response = await fetch("http://localhost:8000/weather");
+  try {
+    const entry = await response.json();
+    document.getElementById("date").innerHTML = entry[entry.length - 1].date;
+    document.getElementById("temp").innerHTML = entry[entry.length - 1].temp;
+    document.getElementById("content").innerHTML =
+      entry[entry.length - 1].content;
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+
+function postGet(postEntry) {
+  postWeather("http://localhost:8000/weather", postEntry).then(function (data) {
+    changeUI("http://localhost:8000/weather");
+  });
+}
 
 async function showEntry() {
   let d = new Date();
@@ -51,5 +67,8 @@ async function showEntry() {
     temp: temperature,
     feelings: userFeelings,
   };
-  postWeather("/weather", projectEntry);
+
+  postGet(projectEntry);
+
+  changeUI();
 }
