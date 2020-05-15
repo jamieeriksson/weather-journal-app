@@ -1,5 +1,5 @@
 // Empty JS object to act as endpoint for all routes
-const projectData = [];
+const projectData = {};
 
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -29,11 +29,8 @@ app.get("/weather", function (req, res) {
 app.post("/weather", addEntry);
 
 function addEntry(req, res) {
-  const newEntry = {
-    date: req.body.date,
-    temp: req.body.temp,
-    content: req.body.feelings,
-  };
-  projectData.push(newEntry);
+  projectData.date = req.body.date;
+  projectData.temp = req.body.temp;
+  projectData.feelings = req.body.feelings;
   res.send(projectData);
 }

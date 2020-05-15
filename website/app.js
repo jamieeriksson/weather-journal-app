@@ -1,10 +1,9 @@
 // On click of "Generate" perform fetching
 document.getElementById("generate").addEventListener("click", showEntry);
 
-const getTemp = async () => {
-  const zip = document.getElementById("zip").value;
+const getTemp = async (zipcode) => {
   const apiKey = "cd5123a986aa675d9c7a468518fcc1aa";
-  const apiURL = `https://api.openweathermap.org/data/2.5/weather?zip=${zip},us&appid=`;
+  const apiURL = `https://api.openweathermap.org/data/2.5/weather?zip=${zipcode},us&appid=`;
 
   // make a GET request to Open Weather Map API
   const response = await fetch(apiURL + apiKey);
@@ -41,10 +40,9 @@ const changeUI = async () => {
   const response = await fetch("http://localhost:8000/weather");
   try {
     const entry = await response.json();
-    document.getElementById("date").innerHTML = entry[entry.length - 1].date;
-    document.getElementById("temp").innerHTML = entry[entry.length - 1].temp;
-    document.getElementById("content").innerHTML =
-      entry[entry.length - 1].content;
+    document.getElementById("date").innerHTML = entry.date;
+    document.getElementById("temp").innerHTML = entry.temp;
+    document.getElementById("content").innerHTML = entry.content;
   } catch (error) {
     console.log("error", error);
   }
@@ -57,18 +55,23 @@ function postGet(postEntry) {
 }
 
 async function showEntry() {
-  let d = new Date();
-  let newDate = d.getMonth() + "." + d.getDate() + "." + d.getFullYear();
-  const userFeelings = document.getElementById("feelings").value;
+  const zip = document.getElementById("zip").value;
+  if (zip !== "") {
+    let d = new Date();
+    let newDate = d.getMonth() + "." + d.getDate() + "." + d.getFullYear();
+    const userFeelings = document.getElementById("feelings").value;
 
-  const temperature = await getTemp();
-  const projectEntry = {
-    date: newDate,
-    temp: temperature,
-    feelings: userFeelings,
-  };
+    const temperature = await getTemp(zip);
+    const projectEntry = {
+      date: newDate,
+      temp: temperature,
+      feelings: userFeelings,
+    };
 
-  postGet(projectEntry);
+    postGet(projectEntry);
 
-  changeUI();
+    changeUI();
+  } else {
+    console.log("No zip");
+  }
 }
