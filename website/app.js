@@ -2,7 +2,7 @@
 document.getElementById("generate").addEventListener("click", showEntry);
 
 const getTemp = async (zipcode) => {
-  const apiKey = "cd5123a986aa675d9c7a468518fcc1aa";
+  const apiKey = YOUR_API_KEY;
   const apiURL = `https://api.openweathermap.org/data/2.5/weather?zip=${zipcode},us&appid=`;
 
   // make a GET request to Open Weather Map API
